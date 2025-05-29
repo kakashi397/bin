@@ -21,15 +21,39 @@ fi
 mkdir "$project_name" && cd "$project_name"
 
 # 🧱 ローカル初期構築
-npm init -y && \
-cp ~/DevTemplates/.gitignore ./ && \
-mkdir -p sass css js && \
-touch index.html sass/style.scss js/script.js && \
-npm install --save-dev sass && \
-git init && \
-git branch -M main && \
-npm pkg set scripts.watch="sass ./sass:./css --watch" && \
-git add . && \
+npm init -y
+cp ~/DevTemplates/.gitignore .gitignore
+mkdir -p sass css js
+touch index.html js/script.js
+npm install --save-dev sass
+git init
+git branch -M main
+npm pkg set scripts.watch="sass ./sass:./css --watch"
+
+# 🧱 FLOCSS構成ディレクトリ追加
+mkdir -p sass/foundation sass/layout sass/object/component sass/object/project sass/object/utility
+
+# 📝 foundationファイル群
+touch sass/foundation/_reset.scss
+touch sass/foundation/_variables.scss
+touch sass/foundation/_mixin.scss
+touch sass/foundation/_functions.scss
+touch sass/foundation/_base.scss
+
+# 📘 _setting.scss（foundationのみ読み込み）
+cat << EOF > sass/_setting.scss
+@use "foundation/functions";
+@use "foundation/mixin";
+@use "foundation/variables";
+@use "foundation/reset";
+@use "foundation/base";
+EOF
+
+# 🎨 style.scss（settingを読み込み）
+echo '@use "setting";' > sass/style.scss
+
+# 🧬 Gitステージング＆初期コミット
+git add .
 git commit -m "初期コミット"
 
 # 🌐 リモートリポジトリ作成の確認
@@ -45,4 +69,4 @@ fi
 code -r .
 
 # 🎉 完了メッセージ
-echo "✅ '$project_name' プロジェクトの初期構築が完了しました！"
+echo "✅ '$project_name' プロジェクトのFLOCSS構成初期化が完了しました！"
