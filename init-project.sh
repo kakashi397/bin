@@ -57,13 +57,22 @@ git add .
 git commit -m "初期コミット"
 
 # 🌐 リモートリポジトリ作成の確認
-read -p "GitHubにプライベートリポジトリを作成してpushしますか？ [y/N]: " push_confirm
+read -p "GitHubにリポジトリを作成してpushしますか？ [y/N]: " push_confirm
 if [[ "$push_confirm" =~ ^[Yy]$ ]]; then
-  gh repo create "$(basename "$PWD")" --private --source=. --remote=origin --push
-  echo "✅ リモートリポジトリを作成し、pushしました！"
+  # パブリック or プライベート選択
+  read -p "リポジトリをパブリックにしますか？（Yesでパブリック / Noでプライベート） [y/N]: " pub_confirm
+  if [[ "$pub_confirm" =~ ^[Yy]$ ]]; then
+    repo_visibility="--public"
+  else
+    repo_visibility="--private"
+  fi
+
+  gh repo create "$(basename "$PWD")" $repo_visibility --source=. --remote=origin --push
+  echo "✅ リモートリポジトリ（$repo_visibility）を作成し、pushしました！"
 else
   echo "📁 ローカルレポジトリのみ作成されました（GitHub未接続）"
 fi
+
 
 # 💻 VSCodeで開く
 code -r .
