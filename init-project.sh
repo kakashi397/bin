@@ -37,7 +37,52 @@ mkdir -p sass/foundation sass/layout sass/object/component sass/object/project s
 touch sass/foundation/_reset.scss
 touch sass/foundation/_variables.scss
 touch sass/foundation/_mixin.scss
+cat << 'EOF' > sass/foundation/_mixin.scss
+@use 'sass:map';
+
+// メディアクエリ用ブレイクポイント定義
+$breakpoints: (
+  xs: "(min-width: 320px)",
+  s : "(min-width: 575px)",
+  m : "(min-width: 767px)",
+  l : "(min-width: 991px)",
+  xl: "(min-width: 1199px)",
+);
+
+@mixin media ($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media #{map.get($breakpoints, $breakpoint)} {
+      @content;
+    }
+  }
+  @else {
+    @error "$breakpoints に #{$breakpoint} ってキーは無いぜ";
+  }
+}
+EOF
+
 touch sass/foundation/_functions.scss
+cat << 'EOF' > sass/foundation/_functions.scss
+@use 'sass:math';
+
+// px→rem(16pxをベースとした場合)
+@function rem($pixels, $context: 16) { 
+  @return math.div($pixels, $context) * 1rem;
+}
+
+// clamp()ジェネレータ
+@function clamp-rem($min-vw, $min-size, $max-vw, $max-size, $base-font-size: 16) {
+  $slope: ($max-size - $min-size) / ($max-vw - $min-vw) * 100;
+  $intercept: $min-size - ($slope * $min-vw / 100);
+
+  $min-rem: $min-size / $base-font-size * 1rem;
+  $max-rem: $max-size / $base-font-size * 1rem;
+  $intercept-rem: $intercept / $base-font-size * 1rem;
+
+  @return clamp(#{$min-rem}, #{$intercept-rem} + #{$slope}vw, #{$max-rem});
+}
+EOF
+
 touch sass/foundation/_base.scss
 
 # 📘 _setting.scss（foundationのみ読み込み）
