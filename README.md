@@ -26,6 +26,8 @@ FLOCSS構成のディレクトリを一式作成
 
 Foundation系の Sass ファイル群を自動生成
 
+_function.scss には clampジェネレータ、px→rem変換の関数、 _mixin.scss にはメディアクエリを記述
+
 _setting.scss に foundation のモジュールを読み込む記述を自動生成
 
 style.scss に @use "setting"; を記述
