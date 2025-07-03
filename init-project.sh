@@ -34,16 +34,16 @@ npm pkg set scripts.watch="sass ./sass:./css --watch"
 mkdir -p sass/foundation sass/layout sass/object/component sass/object/project sass/object/utility
 
 # 📝 foundationファイル群
+touch sass/foundation/_keyframes.scss
 touch sass/foundation/_reset.scss
 touch sass/foundation/_variables.scss
-touch sass/foundation/_mixin.scss
-cat << 'EOF' > sass/foundation/_mixin.scss
-@use 'sass:map';
+touch sass/foundation/_mixins.scss
+cat << 'EOF' > sass/foundation/_mixins.scss@use 'sass:map';
+@use 'sass:math';
 
 // メディアクエリ用ブレイクポイント定義
 $breakpoints: (
-  xs: "(min-width: 320px)",
-  s : "(min-width: 575px)",
+  s : "(min-width: 375px)",
   m : "(min-width: 767px)",
   l : "(min-width: 991px)",
   xl: "(min-width: 1199px)",
@@ -81,6 +81,22 @@ cat << 'EOF' > sass/foundation/_functions.scss
 
   @return clamp(#{$min-rem}, #{$intercept-rem} + #{$slope}vw, #{$max-rem});
 }
+
+// %変換ジェネレータ
+@function to-percent($value, $base) {
+  @if math.unitless($value) {
+    $value: $value * 1px;
+  }
+  @if math.unitless($base) {
+    $base: $base * 1px;
+  }
+  @return math.div($value, $base) * 100%;
+}
+
+// スケール関数
+@function scale($base, $value, $target) {
+  @return ($value / $base) * $target;
+}
 EOF
 
 touch sass/foundation/_base.scss
@@ -88,7 +104,7 @@ touch sass/foundation/_base.scss
 # 📘 _setting.scss（foundationのみ読み込み）
 cat << EOF > sass/_setting.scss
 @use "foundation/functions";
-@use "foundation/mixin";
+@use "foundation/mixins";
 @use "foundation/variables";
 @use "foundation/reset";
 @use "foundation/base";
