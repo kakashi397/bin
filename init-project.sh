@@ -38,7 +38,7 @@ touch sass/foundation/_keyframes.scss
 touch sass/foundation/_reset.scss
 touch sass/foundation/_variables.scss
 touch sass/foundation/_mixins.scss
-cat << 'EOF' > sass/foundation/_mixins.scss@use 'sass:map';
+cat << 'EOF' > sass/foundation/_mixins.scss
 @use 'sass:math';
 
 // メディアクエリ用ブレイクポイント定義
